@@ -21,7 +21,9 @@ Microsoft SQL Server 2019 Database for Managing Pets Clinic's Visits and Physici
 - [Functions Inline Tables](#Functions-Inline-Tables)
     - [Physicians Cost Report](#Physicians-Cost-Report)
     - [Physicians2 Cost Report And Not In Physicians1](#Physicians2-Cost-Report-And-Not-In-Physicians1)
-
+- [Experimental Theories](#Experimental-Theories)
+    - [Physician Variations and Typos](#[Physician-Variations-and-Typos)
+    - [Handel Hundred millions of record](#Handel-Hundred-millions-of-record)
 
 ## Database Schema 
 
@@ -396,3 +398,93 @@ SELECT *  FROM   dbo.fn_Physicians2_Report(@YearStart, @YearEnd, @Age) Order BY 
 ![Physicians2-Cost-Report-And-Not-In-Physicians1-Sample.png](/Screenshots/Physicians2-Cost-Report-And-Not-In-Physicians1-Sample.PNG) 
 
 
+## Experimental Theories
+
+### Physician Variations and Typos
+> Assume that the physician columns within the records table contain several variations on physician names that may include typos. How might you go about pulling data when asked about visit counts for several specific physicians?
+Assume that the physician columns within the records table contain several variations on physician names that may include typos. How might you go about pulling data when asked about visit counts for several specific physicians?
+
+#### Solutions 1
+- Using physician ID for Lookup not names 
+```
+WHERE Physician_ID = 1 OR Physician_ID = 2 OR Physician_ID= 3
+```
+OR
+```
+WHERE Physician_ID IN (SELECT Physician_ID FROM Physicians WHERE ** Fillter **)
+```
+#### Solutions 2
+- Create `Trigger` that replace Invalid or Misspelled Values on Insert or Update for Physicians Table
+
+1- Create Correction Table
+```
+create table Correction (
+ CorrectionId int identity(1,1) not null,
+ falseForm nvarchar(100),
+ correctForm nvarchar(100),
+)
+```
+2- Insert miss or invalid words and its corrections 
+
+```
+insert into Correction select N'Jhoin', N'Jhon'
+insert into Correction select N'Jakc', N'Jack'
+```
+
+3- Create a Trigger  On Insert Or Update Physicians Name
+
+```
+UPDATE Physicians
+SET
+ Physician_FName = c.correctForm
+from Inserted as i
+inner join Correction c
+ on i.Physician_FName = c.falseForm
+where
+ Physicians.Physician_FName = i.Physician_FName;
+ 
+
+UPDATE Physicians
+SET
+ Physician_LName = c.correctForm
+from Inserted as i
+inner join Correction c
+ on i.Physician_LName = c.falseForm
+where
+ Physicians.Physician_LName = i.Physician_LName;
+
+END
+```
+
+#### Solutions 3
+- Create Correction Table that Join the Lookup Tables
+
+1- Create Correction Table
+
+```
+create table Correction (
+ CorrectionId int identity(1,1) not null,
+ falseForm nvarchar(100),
+ correctForm nvarchar(100),
+)
+```
+
+2- Insert miss or invalid words and its corrections 
+
+```
+insert into Correction select N'Jhoin', N'Jhon'
+insert into Correction select N'Jakc', N'Jack'
+```
+
+3- Create JOIN Statement to return the correct value of the `Physician_FName` OR `Physician_LName` WHERE the correctForm is returned a value else return the main value
+
+```
+SELECT       Physician_ID,
+             (CASE WHEN C1.correctForm IS NULL THEN Physician_FName ELSE C1.correctForm END) AS Physician_FName, 
+			 (CASE WHEN C2.correctForm IS NULL THEN Physician_LName ELSE C2.correctForm END) AS Physician_LName
+
+FROM            Physicians LEFT JOIN 
+						Correction AS C1 ON Physicians.Physician_FName = C1.falseForm
+						LEFT JOIN 
+						Correction AS C2 ON Physicians.Physician_LName = C2.falseForm
+```

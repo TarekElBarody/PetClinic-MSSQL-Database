@@ -129,7 +129,8 @@ FROM   Animals INNER JOIN
 #### Explanation
 > The `INNER JOIN` keyword selects records that have matching values in both tables [Owners](#Owners-TABLE-Owners) and [Animals](#Animals-TABLE-Animals) with forgein key `Owners.Owner_ID` to display Animals with its owners informations
 
-#### Image Structure
+#### Query Structure
+
 ![AnimalFullView.png](/Screenshots/AnimalFullView.PNG) 
 
 #### Sample Results
@@ -173,8 +174,9 @@ FROM    dbo.Procedures INNER JOIN
 
 > The `LEFT JOIN` keyword returns all records from the left table [Animals](#Animals-TABLE-Animals), and the matching records from the right table [Owners](#Owners-TABLE-Owners). 
 
-#### Image Structure
-![Visits-Full-Costs-View.png](Screenshots/Visits-Full-Costs-View.PNG) 
+#### Query Structure
+
+![Visits-Full-Costs-View.png](/Screenshots/Visits-Full-Costs-View.PNG) 
 
 #### Sample Results
 - Page 1
@@ -254,7 +256,7 @@ GROUP BY Physicians.Physician_ID, Physicians.Physician_FName, Physicians.Physici
 
 > Using `ISNULL` To insure that return value will be 0 if thier is no data on [Procedures](#Procedures-TABLE-Procedures) Table
 
-7- LEFT JOIN Physicians with Visits, Animals, Procedures, and Clinics Tables to view nessasry information
+7- LEFT JOIN Physicians with Visits, Animals, Procedures, and Clinics Tables to gather nessasry information
 > The `LEFT JOIN` keyword returns all records from the left table [Physicians](#Physicians-TABLE-Physicians), and the matching records from the right table [Clinics](#Clinics-TABLE-Clinics). 
 
 > The `LEFT JOIN` keyword returns all records from the left table [Physicians](#Physicians-TABLE-Physicians), and the matching records from the right table [Visits](#Visits-TABLE-Visits). 
@@ -276,5 +278,26 @@ GROUP BY Physicians.Physician_ID, Physicians.Physician_FName, Physicians.Physici
 
 9- GROUP Table By View columns to conssets with `COUNT` and `SUM` functions
 > Grob BY `Physicians.Physician_ID, Physicians.Physician_FName, Physicians.Physician_LName, Physicians.Physician_Gender, Physicians.Physician_Title, Physicians.Physician_Role, Physicians.Physician_Created, Clinics.Clinic_ID, Clinics.Clinic_Name, Clinics.Clinic_Country` to can view agregation function (`COUNT`, `SUM`)
+
+#### Query Usage
+```
+USE [PetClinic]
+DECLARE @YearEnd DATE
+SET @YearEnd = '12/31/2022'
+
+DECLARE @Age INT
+SET @Age = 3
+
+SELECT *  FROM   dbo.fn_Physicians_Report(@YearStart, @YearEnd, @Age) Order BY Physician_ID
+
+```
+
+#### Query Structure
+![Visits-Full-Costs-View.png](Screenshots/Physicians-Cost-Report.PNG) 
+
+#### Sample Results
+![Visits-Full-Costs-View-Sample-1.png](/Screenshots/Physicians-Cost-Report-Sample.PNG) 
+
+
 
 

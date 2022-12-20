@@ -176,8 +176,8 @@ FROM    dbo.Procedures INNER JOIN
 
 #### Sample Results
 - Page 1
-![Visits-Full-Costs-View-Sample-1.png](/Screenshots/Visits-Full-Costs-View-Sample-1.png) 
+![Visits-Full-Costs-View-Sample-1.png](/Screenshots/Visits-Full-Costs-View-Sample-1.PNG) 
 - Page 2
-![Visits-Full-Costs-View-Sample-2.png](/Screenshots/Visits-Full-Costs-View-Sample-2.png) 
+![Visits-Full-Costs-View-Sample-2.png](/Screenshots/Visits-Full-Costs-View-Sample-2.PNG) 
 
 

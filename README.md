@@ -24,7 +24,6 @@ Microsoft SQL Server 2019 Database for Managing Pets Clinic's Visits and Physici
 - [Experimental Theories](#Experimental-Theories)
     - [Physician Variations and Typos](#Physician-Variations-and-Typos)
     - [Long Query more than 700 lines](#Long-Query-more-than-700-lines)
-    - [Handel Hundred millions of record](#Handel-Hundred-millions-of-record)
 
 ## Database Schema 
 

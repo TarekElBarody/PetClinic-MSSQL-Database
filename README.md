@@ -22,7 +22,7 @@ Microsoft SQL Server 2019 Database for Managing Pets Clinic's Visits and Physici
     - [Physicians Cost Report](#Physicians-Cost-Report)
     - [Physicians2 Cost Report And Not In Physicians1](#Physicians2-Cost-Report-And-Not-In-Physicians1)
 - [Experimental Theories](#Experimental-Theories)
-    - [Physician Variations and Typos](#[Physician-Variations-and-Typos)
+    - [Physician Variations and Typos](#Physician-Variations-and-Typos)
     - [Handel Hundred millions of record](#Handel-Hundred-millions-of-record)
 
 ## Database Schema 

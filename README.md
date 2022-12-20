@@ -20,7 +20,6 @@ Microsoft SQL Server 2019 Database for Managing Pets Clinic's Visits and Physici
     - [Visits Full Costs View](#Visits-Full-Costs-View)
 - [Functions Inline Tables](#Functions-Inline-Tables)
     - [Physicians Cost Report](#Physicians-Cost-Report)
-    - [Visits Full Costs View](#Visits-Full-Costs-View)
 
 
 ## Database Schema 

@@ -172,7 +172,7 @@ FROM    dbo.Procedures INNER JOIN
 > The `LEFT JOIN` keyword returns all records from the left table [Animals](#Animals-TABLE-Animals), and the matching records from the right table [Owners](#Owners-TABLE-Owners). 
 
 #### Image Structure
-![Visits-Full-Costs-View.png](Screenshots/Visits-Full-Costs-View.png) 
+![Visits-Full-Costs-View.png](Screenshots/Visits-Full-Costs-View.PNG) 
 
 #### Sample Results
 - Page 1

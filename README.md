@@ -23,6 +23,7 @@ Microsoft SQL Server 2019 Database for Managing Pets Clinic's Visits and Physici
     - [Physicians2 Cost Report And Not In Physicians1](#Physicians2-Cost-Report-And-Not-In-Physicians1)
 - [Experimental Theories](#Experimental-Theories)
     - [Physician Variations and Typos](#Physician-Variations-and-Typos)
+    - [Long Query more than 700 lines](#Long-Query-more-than-700-lines)
     - [Handel Hundred millions of record](#Handel-Hundred-millions-of-record)
 
 ## Database Schema 
@@ -488,3 +489,55 @@ FROM            Physicians LEFT JOIN
 						LEFT JOIN 
 						Correction AS C2 ON Physicians.Physician_LName = C2.falseForm
 ```
+
+### Long Query more than 700 lines
+> You have written a long query (700+ lines) for a project and the query has been running for several hours. Can you list some possible reasons why this might happen? What are the potential fixes?
+
+#### Possible Reasons
+- Lack of useful statistics
+- Lack of useful indexes
+- Lack of useful indexed view
+- Lack of useful data striping
+- Lack of useful partitioning.
+- Poor query optimized
+- Lake of correct indexing columns
+- Poor Database Structure
+- Low Server performance
+- Too many Lookups and Joins with deep level
+
+#### Potential Fixes
+
+- Add missing indexes
+
+Table indexes in databases help retrieve information faster and more efficiently.
+
+> In SQL Server, when you execute a query, the optimizer generates an execution plan. If it detects the missing index that may be created to optimize performance, the execution plan suggests this in the warning section. With this suggestion, it informs you which columns the current SQL should be indexed, and how performance can be improved upon completion.
+
+
+- Check for unused indexes
+> You may encounter a situation where indexes exist but are not being used. One of the reasons for that might be implicit data type conversion. i.e. convert int data to varchar and run the comparison only after that. In this case, indexes won’t be used. 
+
+- Avoid using multiple OR in the FILTER predicate
+> When you need to combine two or more conditions, it is recommended to eliminate the usage of the OR operator or split the query into parts separating search expressions. SQL Server can not process OR within one operation. Instead, it evaluates each component of the OR which, in turn, may lead to poor performance.
+
+- Use wildcards at the end of a phrase only
+> Wildcards serve as a placeholder for words and phrases and can be added at the beginning/end of them. To make data retrieval faster and more efficient, you can use wildcards in the SELECT statement at the end of a phrase.
+
+- Avoid too many JOINs
+> When you add multiple tables to a query and join them, you may overload it. In addition, a large number of tables to retrieve data from may result in an inefficient execution plan. When generating a plan, the SQL query optimizer needs to identify how the tables are joined, in which order, how and when to apply filters and aggregation.
+
+> JOIN elimination is one of the many techniques to achieve efficient query plans. You can split a single query into several separate queries which can later be joined, and thus remove unnecessary joins, subqueries, tables, etc.
+
+- Use SELECT fields instead of SELECT *
+> The SELECT statement is used to retrieve data from the database. In the case of large databases, it is not recommended to retrieve all data because this will take more resources on querying a huge volume of data.
+
+> If we execute the following query, we will retrieve all data from the Users table, including, for example, users’ avatar pictures. The result table will contain lots of data and will take too much memory and CPU usage.
+
+
+- Use TOP to sample query results
+> The SELECT TOP command is used to set a limit on the number of records to be returned from the database. To make sure that your query will output the required result, you can use this command to fetch several rows as a sample.
+
+- Create JOINs with INNER JOIN (not WHERE)
+> The INNER JOIN statement returns all matching rows from joined tables, while the WHERE clause filters the resulting rows based on the specified condition. Retrieving data from multiple tables based on the WHERE keyword condition is called NON-ANSI JOINs while INNER JOIN belongs to ANSI JOINs.
+
+> There is no difference for SQL Server how you write the query – using ANSI or NON-ANSI joins – it’s just much easier to understand and analyze queries written using ANSI joins. You can clearly see where the JOIN conditions and the WHERE filters are, whether you missed any JOIN or filter predicates, whether you joined the required tables, etc.

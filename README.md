@@ -20,6 +20,7 @@ Microsoft SQL Server 2019 Database for Managing Pets Clinic's Visits and Physici
     - [Visits Full Costs View](#Visits-Full-Costs-View)
 - [Functions Inline Tables](#Functions-Inline-Tables)
     - [Physicians Cost Report](#Physicians-Cost-Report)
+    - [Physicians2 Cost Report And Not In Physicians1](#Physicians2-Cost-Report-And-Not-In-Physicians1)
 
 
 ## Database Schema 
@@ -282,6 +283,9 @@ GROUP BY Physicians.Physician_ID, Physicians.Physician_FName, Physicians.Physici
 #### Query Usage
 ```
 USE [PetClinic]
+DECLARE @YearStart DATE
+SET @YearStart = '01/01/2019'
+
 DECLARE @YearEnd DATE
 SET @YearEnd = '12/31/2022'
 
@@ -293,11 +297,102 @@ SELECT *  FROM   dbo.fn_Physicians_Report(@YearStart, @YearEnd, @Age) Order BY P
 ```
 
 #### Query Structure
-![Visits-Full-Costs-View.png](Screenshots/Physicians-Cost-Report.PNG) 
+![Physicians-Cost-Report.png](/Screenshots/Physicians-Cost-Report.PNG) 
 
 #### Sample Results
-![Visits-Full-Costs-View-Sample-1.png](/Screenshots/Physicians-Cost-Report-Sample.PNG) 
+![Physicians-Cost-Report-Sample.png](/Screenshots/Physicians-Cost-Report-Sample.PNG) 
 
 
+### Physicians2 Cost Report And Not In Physicians1
+> Created `dbo.fn_Physicians2_Report` that holds a query selector with argments (`@YearStart`, `@YearEnd`, `@Age`)
+
+> View full report for both of Physicians Num 2 on [Visits](#Visits-TABLE-Visits) Table `Visit_Physician2_ID` and it not in `Visit_Physician1_ID`
+
+#### Arguments
+- `@YearStart` [date] # calculate costs based on animal visits on larger or equal than start date
+- `@YearEnd` [date] # calculate costs based on animal visits on smaller or than end date
+- `@Age` [int] # calculate costs based on animal age that below @Age Number
+
+#### Query
+```
+SELECT      Physicians.Physician_ID, Physicians.Physician_FName, Physicians.Physician_LName, CONCAT(dbo.Physicians.Physician_FName, ' ', dbo.Physicians.Physician_LName) AS Physician_Name, 'P2' AS Physician_Posstion
+			,Physicians.Physician_Gender, Physicians.Physician_Title, Physicians.Physician_Role, 
+			Clinics.Clinic_ID, Clinics.Clinic_Name, Clinics.Clinic_Country, 
+			COUNT(DISTINCT(Animals.Animal_ID)) AS Animal_Volume, 
+			COUNT(Visits.Visit_Physician2_ID) AS Visit_Frequancy, 
+			ISNULL(SUM(Procedures.Procedure_Cost),0) AS Procedure_Sum_Cost, 
+			@YearStart AS Year_Start ,@YearEnd AS Year_End , @Age AS Pet_Under_Age
+FROM            Physicians LEFT OUTER JOIN
+                         Clinics ON Physicians.Physician_Clinic_ID = Clinics.Clinic_ID LEFT OUTER JOIN
+                         Visits ON Physicians.Physician_ID = Visits.Visit_Physician2_ID LEFT OUTER JOIN
+                         Procedures ON Visits.Visit_ID = Procedures.Procedure_Visit_ID LEFT OUTER JOIN
+                         Animals ON Visits.Visit_Animal_ID = Animals.Animal_ID
+
+WHERE Visits.Visit_Date >= @YearStart AND Visits.Visit_Date <= @YearEnd 
+AND DATEDIFF(YEAR, Animals.Animal_BrithDate, GETDATE()) < @Age
+AND Visits.Visit_Physician2_ID NOT IN (SELECT Visit_Physician1_ID FROM Visits)
+
+GROUP BY Physicians.Physician_ID, Physicians.Physician_FName, Physicians.Physician_LName, Physicians.Physician_Gender, Physicians.Physician_Title, Physicians.Physician_Role, Physicians.Physician_Created, Clinics.Clinic_ID, Clinics.Clinic_Name, Clinics.Clinic_Country
+```
+#### Explanation
+1- List all Physicians and Joining with ([Clinics](#Clinics-TABLE-Clinics), [Visits](#Visits-TABLE-Visits), [Animals](#Animals-TABLE-Animals), [Procedures](#Procedures-TABLE-Procedures)) Tables
+
+2- `CONCAT` Physicians (`Physician_FName` and `Physician_LName`) AS `Physician_Name`
+
+3- Count Animal_ID from [Visits](#Visits-TABLE-Visits) Table to detremin the animals visit volume `COUNT(DISTINCT(Animals.Animal_ID)) AS Animal_Volume`
+
+4- Count `Visit_Physician2_ID` ON [Visits](#Visits-TABLE-Visits) Table to detremin the Visit Frequancy `COUNT(Visits.Visit_Physician2_ID) AS Visit_Frequancy` 
+
+6- Sum Procedure Cost to detremin Actual cost of the Physician `ISNULL(SUM(Procedures.Procedure_Cost),0) AS Procedure_Sum_Cost` 
+
+> Using `ISNULL` To insure that return value will be 0 if thier is no data on [Procedures](#Procedures-TABLE-Procedures) Table
+
+7- LEFT JOIN Physicians with Visits, Animals, Procedures, and Clinics Tables to gather nessasry information
+> The `LEFT JOIN` keyword returns all records from the left table [Physicians](#Physicians-TABLE-Physicians), and the matching records from the right table [Clinics](#Clinics-TABLE-Clinics). 
+
+> The `LEFT JOIN` keyword returns all records from the left table [Physicians](#Physicians-TABLE-Physicians), and the matching records from the right table [Visits](#Visits-TABLE-Visits). 
+
+> The `LEFT JOIN` keyword returns all records from the left table [Visits](#Visits-TABLE-Visits), and the matching records from the right table [Procedures](#Procedures-TABLE-Procedures). 
+
+> The `LEFT JOIN` keyword returns all records from the left table [Physicians](#Physicians-TABLE-Physicians), and the matching records from the right table [Clinics](#Clinics-TABLE-Clinics). 
+
+> The `LEFT JOIN` keyword returns all records from the left table [Visits](#Visits-TABLE-Visits), and the matching records from the right table [Animals](#Animals-TABLE-Animals). 
+
+8- WHERE Condetions 
+- Using the  Argmetns (`@YearStart`, `@YearEnd`) to reduce database rows matching
+> Using stament After Where `Visits.Visit_Date >= @YearStart AND Visits.Visit_Date <= @YearEnd` to get all results that match all dates from visits that is larger or equal to the `@YearStart` and smaller than `@YearEnd`  . 
+
+- Using the  Argmetns (`@Age`) to reduce database rows matching
+> Using stament After Where `DATEDIFF(YEAR, Animals.Animal_BrithDate, GETDATE()) < @Age`
+
+> `DATEDIFF` for getting the date diffrance beween 2 date and in our condtion is Time now `GETDATE()` and the Pet Birthdate `Animals.Animal_BrithDate`
+
+- Using the  `NOT IN` to select `Visit_Physician2_ID` that is not in [Visits](#Visits-TABLE-Visits) where `Visit_Physician2_ID` = `Visit_Physician1_ID`
+> Usage `AND Visits.Visit_Physician2_ID NOT IN (SELECT Visit_Physician1_ID FROM Visits)`
+
+9- GROUP Table By View columns to conssets with `COUNT` and `SUM` functions
+> Grob BY `Physicians.Physician_ID, Physicians.Physician_FName, Physicians.Physician_LName, Physicians.Physician_Gender, Physicians.Physician_Title, Physicians.Physician_Role, Physicians.Physician_Created, Clinics.Clinic_ID, Clinics.Clinic_Name, Clinics.Clinic_Country` to can view agregation function (`COUNT`, `SUM`)
+
+#### Query Usage
+```
+USE [PetClinic]
+DECLARE @YearStart DATE
+SET @YearStart = '01/01/2019'
+
+DECLARE @YearEnd DATE
+SET @YearEnd = '12/31/2022'
+
+DECLARE @Age INT
+SET @Age = 3
+
+SELECT *  FROM   dbo.fn_Physicians2_Report(@YearStart, @YearEnd, @Age) Order BY Physician_ID
+
+```
+
+#### Query Structure
+![Physicians2-Cost-Report-And-Not-In-Physicians1.png](/Screenshots/Physicians2-Cost-Report-And-Not-In-Physicians1.PNG) 
+
+#### Sample Results
+![Physicians2-Cost-Report-And-Not-In-Physicians1-Sample.png](/Screenshots/Physicians2-Cost-Report-And-Not-In-Physicians1-Sample.PNG) 
 
 

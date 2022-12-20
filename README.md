@@ -105,7 +105,7 @@ Microsoft SQL Server 2019 Database for Managing Pets Clinic's Visits and Physici
 
 
 ## Database Image Structure
-![Database_Structure.png](Screenshots/Database_Structure.png) 
+![Database_Structure.png](/Screenshots/Database_Structure.png) 
 
 ## Views Queries 
 > Views and Explanation in sql
@@ -128,10 +128,10 @@ FROM   Animals INNER JOIN
 > The `INNER JOIN` keyword selects records that have matching values in both tables [Owners](#Owners-TABLE-Owners) and [Animals](#Animals-TABLE-Animals) with forgein key `Owners.Owner_ID` to display Animals with its owners informations
 
 #### Image Structure
-![AnimalFullView.png](Screenshots/AnimalFullView.png) 
+![AnimalFullView.png](/Screenshots/AnimalFullView.PNG) 
 
 #### Sample Results
-![AnimalFullView-Sample.png](Screenshots/AnimalFullView-Sample.PNG) 
+![AnimalFullView-Sample.png](/Screenshots/AnimalFullView-Sample.PNG) 
 
 ### Visits Full Costs View
 > combine  2 Tables [Owners](#Owners-TABLE-Owners) AND [Animals](#Animals-TABLE-Animals)
@@ -176,8 +176,8 @@ FROM    dbo.Procedures INNER JOIN
 
 #### Sample Results
 - Page 1
-![Visits-Full-Costs-View-Sample-1.png](Screenshots/Visits-Full-Costs-View-Sample-1.png) 
+![Visits-Full-Costs-View-Sample-1.png](/Screenshots/Visits-Full-Costs-View-Sample-1.png) 
 - Page 2
-![Visits-Full-Costs-View-Sample-2.png](Screenshots/Visits-Full-Costs-View-Sample-2.png) 
+![Visits-Full-Costs-View-Sample-2.png](/Screenshots/Visits-Full-Costs-View-Sample-2.png) 
 
 

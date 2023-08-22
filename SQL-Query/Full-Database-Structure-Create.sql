@@ -1,6 +1,5 @@
 USE [master]
 GO
-/****** Object:  Database [PetClinic]    Script Date: 20/12/2022 09:31:33 م ******/
 CREATE DATABASE [PetClinic]
  CONTAINMENT = NONE
  ON  PRIMARY 
@@ -239,14 +238,6 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 
-
-
--- =============================================
--- Author:		<Author,,Name>
--- Create date: <Create Date,,>
--- Description:	<Description,,>
--- (0 + Convert(Char(8),GETDATE(),112) - Convert(Char(8),Animals.Animal_BrithDate,112))  / 10000 
--- =============================================
 CREATE FUNCTION [dbo].[fn_Physicians1_Report]
 (	
    	@YearStart DATE,
@@ -281,7 +272,6 @@ GROUP BY Physicians.Physician_ID, Physicians.Physician_FName, Physicians.Physici
 
 )
 GO
-/****** Object:  Table [dbo].[Owners]    Script Date: 20/12/2022 09:31:34 م ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -305,7 +295,6 @@ CREATE TABLE [dbo].[Owners](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  View [dbo].[AnimalFullView]    Script Date: 20/12/2022 09:31:34 م ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -316,17 +305,11 @@ SELECT       dbo.Owners.Owner_FName, dbo.Owners.Owner_LName, dbo.Owners.Owner_Ph
 FROM            dbo.Animals INNER JOIN
                          dbo.Owners ON dbo.Animals.Animal_Owner_ID = dbo.Owners.Owner_ID
 GO
-/****** Object:  UserDefinedFunction [dbo].[fn_Physicians_Report]    Script Date: 20/12/2022 09:31:34 م ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
--- =============================================
--- Author:		<Author,,Name>
--- Create date: <Create Date,,>
--- Description:	<Description,,>
--- (0 + Convert(Char(8),GETDATE(),112) - Convert(Char(8),Animals.Animal_BrithDate,112))  / 10000 
--- =============================================
+
 CREATE FUNCTION [dbo].[fn_Physicians_Report]
 (	
    	@YearStart DATE,
@@ -337,7 +320,6 @@ RETURNS TABLE
 AS
 RETURN 
 (
-	-- Add the SELECT statement with parameter references here
 	SELECT      Physicians.Physician_ID, Physicians.Physician_FName, Physicians.Physician_LName, CONCAT(dbo.Physicians.Physician_FName, ' ', dbo.Physicians.Physician_LName) AS Physician_Name, 'P1' AS Physician_Posstion
 			,Physicians.Physician_Gender, Physicians.Physician_Title, Physicians.Physician_Role, 
 			Clinics.Clinic_ID, Clinics.Clinic_Name, Clinics.Clinic_Country, 
@@ -381,7 +363,6 @@ GROUP BY Physicians.Physician_ID, Physicians.Physician_FName, Physicians.Physici
 
 )
 GO
-/****** Object:  View [dbo].[View_Visits_Costs]    Script Date: 20/12/2022 09:31:34 م ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -402,7 +383,6 @@ FROM            dbo.Procedures INNER JOIN
                          dbo.Owners ON dbo.Animals.Animal_Owner_ID = dbo.Owners.Owner_ID
 
 GO
-/****** Object:  Index [IX_Animals]    Script Date: 20/12/2022 09:31:34 م ******/
 CREATE NONCLUSTERED INDEX [IX_Animals] ON [dbo].[Animals]
 (
 	[Animal_Owner_ID] ASC
@@ -410,7 +390,6 @@ CREATE NONCLUSTERED INDEX [IX_Animals] ON [dbo].[Animals]
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [IX_Animals_1]    Script Date: 20/12/2022 09:31:34 م ******/
 CREATE NONCLUSTERED INDEX [IX_Animals_1] ON [dbo].[Animals]
 (
 	[Animal_Name] ASC
@@ -418,7 +397,6 @@ CREATE NONCLUSTERED INDEX [IX_Animals_1] ON [dbo].[Animals]
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [IX_Animals_2]    Script Date: 20/12/2022 09:31:34 م ******/
 CREATE NONCLUSTERED INDEX [IX_Animals_2] ON [dbo].[Animals]
 (
 	[Animal_Type] ASC
@@ -426,13 +404,11 @@ CREATE NONCLUSTERED INDEX [IX_Animals_2] ON [dbo].[Animals]
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [IX_Animals_3]    Script Date: 20/12/2022 09:31:34 م ******/
 CREATE NONCLUSTERED INDEX [IX_Animals_3] ON [dbo].[Animals]
 (
 	[Animal_Species] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 GO
-/****** Object:  Index [IX_Animals_4]    Script Date: 20/12/2022 09:31:34 م ******/
 CREATE NONCLUSTERED INDEX [IX_Animals_4] ON [dbo].[Animals]
 (
 	[Animal_BrithDate] ASC
@@ -440,7 +416,6 @@ CREATE NONCLUSTERED INDEX [IX_Animals_4] ON [dbo].[Animals]
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [IX_Owners]    Script Date: 20/12/2022 09:31:34 م ******/
 CREATE NONCLUSTERED INDEX [IX_Owners] ON [dbo].[Owners]
 (
 	[Owner_FName] ASC
@@ -448,7 +423,6 @@ CREATE NONCLUSTERED INDEX [IX_Owners] ON [dbo].[Owners]
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [IX_Owners_1]    Script Date: 20/12/2022 09:31:34 م ******/
 CREATE NONCLUSTERED INDEX [IX_Owners_1] ON [dbo].[Owners]
 (
 	[Owner_LName] ASC
@@ -456,7 +430,6 @@ CREATE NONCLUSTERED INDEX [IX_Owners_1] ON [dbo].[Owners]
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [IX_Owners_2]    Script Date: 20/12/2022 09:31:34 م ******/
 CREATE NONCLUSTERED INDEX [IX_Owners_2] ON [dbo].[Owners]
 (
 	[Owner_FName] ASC,
@@ -465,7 +438,6 @@ CREATE NONCLUSTERED INDEX [IX_Owners_2] ON [dbo].[Owners]
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [IX_Owners_3]    Script Date: 20/12/2022 09:31:34 م ******/
 CREATE NONCLUSTERED INDEX [IX_Owners_3] ON [dbo].[Owners]
 (
 	[Owner_License_Num] ASC
@@ -473,7 +445,6 @@ CREATE NONCLUSTERED INDEX [IX_Owners_3] ON [dbo].[Owners]
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [IX_Owners_4]    Script Date: 20/12/2022 09:31:34 م ******/
 CREATE NONCLUSTERED INDEX [IX_Owners_4] ON [dbo].[Owners]
 (
 	[Owner_Phone] ASC
@@ -481,7 +452,6 @@ CREATE NONCLUSTERED INDEX [IX_Owners_4] ON [dbo].[Owners]
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [IX_Physicians]    Script Date: 20/12/2022 09:31:34 م ******/
 CREATE NONCLUSTERED INDEX [IX_Physicians] ON [dbo].[Physicians]
 (
 	[Physician_FName] ASC
@@ -489,13 +459,11 @@ CREATE NONCLUSTERED INDEX [IX_Physicians] ON [dbo].[Physicians]
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [IX_Physicians_1]    Script Date: 20/12/2022 09:31:34 م ******/
 CREATE NONCLUSTERED INDEX [IX_Physicians_1] ON [dbo].[Physicians]
 (
 	[Physician_LName] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 GO
-/****** Object:  Index [IX_Procedures]    Script Date: 20/12/2022 09:31:34 م ******/
 CREATE NONCLUSTERED INDEX [IX_Procedures] ON [dbo].[Procedures]
 (
 	[Procedure_Cost] ASC
@@ -503,37 +471,31 @@ CREATE NONCLUSTERED INDEX [IX_Procedures] ON [dbo].[Procedures]
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [IX_Procedures_1]    Script Date: 20/12/2022 09:31:34 م ******/
 CREATE NONCLUSTERED INDEX [IX_Procedures_1] ON [dbo].[Procedures]
 (
 	[Procedure_Service] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 GO
-/****** Object:  Index [IX_Visits]    Script Date: 20/12/2022 09:31:34 م ******/
 CREATE NONCLUSTERED INDEX [IX_Visits] ON [dbo].[Visits]
 (
 	[Visit_Animal_ID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 GO
-/****** Object:  Index [IX_Visits_1]    Script Date: 20/12/2022 09:31:34 م ******/
 CREATE NONCLUSTERED INDEX [IX_Visits_1] ON [dbo].[Visits]
 (
 	[Visit_Clinic_ID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 GO
-/****** Object:  Index [IX_Visits_2]    Script Date: 20/12/2022 09:31:34 م ******/
 CREATE NONCLUSTERED INDEX [IX_Visits_2] ON [dbo].[Visits]
 (
 	[Visit_Date] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 GO
-/****** Object:  Index [IX_Visits_3]    Script Date: 20/12/2022 09:31:34 م ******/
 CREATE NONCLUSTERED INDEX [IX_Visits_3] ON [dbo].[Visits]
 (
 	[Visit_Physician1_ID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 GO
-/****** Object:  Index [IX_Visits_4]    Script Date: 20/12/2022 09:31:34 م ******/
 CREATE NONCLUSTERED INDEX [IX_Visits_4] ON [dbo].[Visits]
 (
 	[Visit_Physician2_ID] ASC
